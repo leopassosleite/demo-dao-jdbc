@@ -2,6 +2,7 @@ package application;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Scanner;
 
 import model.dao.DaoFactory;
 import model.dao.ProductDao;
@@ -11,6 +12,8 @@ import model.entities.Product;
 public class Program {
 
 	public static void main(String[] args) {
+		
+		Scanner sc = new Scanner(System.in);
 		
 		ProductDao productDao = DaoFactory.createProductDao();
 		
@@ -36,10 +39,16 @@ public class Program {
 		productDao.insert(newProduct);
 		System.out.println("Inserted! New id = " + newProduct.getId());
 		
-		System.out.println("\n=== TEST 5: product product update ===");
+		System.out.println("\n=== TEST 5: product update ===");
 		product = productDao.findById(1);
 		product.setName("Máquina de lavar");
 		productDao.upadate(product);
 		System.out.println("Updade completo");
+		
+		System.out.println("\n=== TEST 6: product delete ===");
+		System.out.println("Informe um id para deletar: ");
+		int id = sc .nextInt();
+		productDao.deleteById(id);
+		System.out.println("Deletado com sucesso!");
 	}
 }
