@@ -44,11 +44,9 @@ public class ProductDaoJDBC implements ProductDao {
 		ResultSet rs = null;
 		try {
 			st = conn.prepareStatement(
-					"SELECT product.*,department.Name as DepName "
-					+ " FROM product INNER JOIN department "			
-					+ "ON product.DepartmentId = department.Id "
-					+ "WHERE product.Id = ? ");
-			
+					"SELECT product.*,department.Name as DepName " + " FROM product INNER JOIN department "
+							+ "ON product.DepartmentId = department.Id " + "WHERE product.Id = ? ");
+
 			st.setInt(1, id);
 			rs = st.executeQuery();
 			if (rs.next()) {
@@ -57,11 +55,9 @@ public class ProductDaoJDBC implements ProductDao {
 				return obj;
 			}
 			return null;
-		}
-		catch(SQLException e) {
+		} catch (SQLException e) {
 			throw new DbException(e.getMessage());
-		}
-		finally {
+		} finally {
 			DB.closeStatement(st);
 			DB.closeResultSet(rs);
 		}
@@ -87,33 +83,22 @@ public class ProductDaoJDBC implements ProductDao {
 
 	@Override
 	public List<Product> findALL() {
-
-		return null;
-	}
-
-	@Override
-	public List<Product> findByDepartment(Department department) {
 		PreparedStatement st = null;
 		ResultSet rs = null;
 		try {
 			st = conn.prepareStatement(
-					"SELECT product.*,department.Name as DepName "
-					+ "FROM product INNER JOIN department "
-					+ "ON product.DepartmentId = department.Id "
-					+ "WHERE DepartmentId = ? "
-					+ "ORDER BY Name");
-			
-			st.setInt(1, department.getId());
-			
+					"SELECT product.*,department.Name as DepName " + "FROM product INNER JOIN department "
+							+ "ON product.DepartmentId = department.Id " + "ORDER BY Name");
+
 			rs = st.executeQuery();
-			
+
 			List<Product> list = new ArrayList<>();
 			Map<Integer, Department> map = new HashMap<>();
-			
+
 			while (rs.next()) {
-				
+
 				Department dep = map.get(rs.getInt("DepartmentId"));
-				
+
 				if (dep == null) {
 					dep = instantiateDepartment(rs);
 					map.put(rs.getInt("DepartmentId"), dep);
@@ -122,11 +107,45 @@ public class ProductDaoJDBC implements ProductDao {
 				list.add(obj);
 			}
 			return list;
-		}
-		catch(SQLException e) {
+		} catch (SQLException e) {
 			throw new DbException(e.getMessage());
+		} finally {
+			DB.closeStatement(st);
+			DB.closeResultSet(rs);
 		}
-		finally {
+	}
+
+	@Override
+	public List<Product> findByDepartment(Department department) {
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		try {
+			st = conn.prepareStatement(
+					"SELECT product.*,department.Name as DepName " + "FROM product INNER JOIN department "
+							+ "ON product.DepartmentId = department.Id " + "WHERE DepartmentId = ? " + "ORDER BY Name");
+
+			st.setInt(1, department.getId());
+
+			rs = st.executeQuery();
+
+			List<Product> list = new ArrayList<>();
+			Map<Integer, Department> map = new HashMap<>();
+
+			while (rs.next()) {
+
+				Department dep = map.get(rs.getInt("DepartmentId"));
+
+				if (dep == null) {
+					dep = instantiateDepartment(rs);
+					map.put(rs.getInt("DepartmentId"), dep);
+				}
+				Product obj = instantiateProduct(rs, dep);
+				list.add(obj);
+			}
+			return list;
+		} catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		} finally {
 			DB.closeStatement(st);
 			DB.closeResultSet(rs);
 		}
