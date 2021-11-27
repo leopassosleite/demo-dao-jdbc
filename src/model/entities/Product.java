@@ -12,18 +12,20 @@ public class Product implements Serializable {
 	private String name;
 	private Date saleDate;
 	private Double price;
+	private Integer quantity;
 	
 	private Department department;
 	
 	public Product() {
 	}
 
-	public Product(Integer id, String name, Date saleDate, Double price, Department department) {
+	public Product(Integer id, String name, Date saleDate, Integer quantity, Double price, Department department) {
 		this.id = id;
 		this.name = name;
 		this.saleDate = saleDate;
 		this.price = price;
-		this.department = department;
+		this.quantity = quantity;
+		this.department = department;	
 	}
 
 	public Integer getId() {
@@ -58,6 +60,14 @@ public class Product implements Serializable {
 		this.price = price;
 	}
 
+	public Integer getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(Integer quantity) {
+		this.quantity = quantity;
+	}
+
 	public Department getDepartment() {
 		return department;
 	}
@@ -85,7 +95,7 @@ public class Product implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Product [id=" + id + ", name=" + name + ", saleDate=" + saleDate + ", price=" + price + ", department="
-				+ department + "]";
-	}	
+		return "Product [id=" + id + ", name=" + name + ", saleDate=" + saleDate + ", price=" + price + ", quantity="
+				+ quantity + ", department=" + department + "]";
+	}
 }

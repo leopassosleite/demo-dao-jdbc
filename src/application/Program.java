@@ -11,12 +11,10 @@ public class Program {
 
 	public static void main(String[] args) {
 		
-		Department obj = new Department(1, "Eletrônicos");
-		
-		Product product = new Product(21, "Xbox", new Date(), 6100.0, obj);
-		
 		ProductDao productDao = DaoFactory.createProductDao();
 		
+		Product product = productDao.findById(3);
+
 		System.out.println(product);
 
 	}
