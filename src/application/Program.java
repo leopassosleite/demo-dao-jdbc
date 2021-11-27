@@ -41,9 +41,9 @@ public class Program {
 		
 		System.out.println("\n=== TEST 5: product update ===");
 		product = productDao.findById(1);
-		product.setName("Máquina de lavar");
+		product.setName("MÃ¡quina de lavar");
 		productDao.upadate(product);
-		System.out.println("Updade completo");
+		System.out.println("Update completo");
 		
 		System.out.println("\n=== TEST 6: product delete ===");
 		System.out.println("Informe um id para deletar: ");
