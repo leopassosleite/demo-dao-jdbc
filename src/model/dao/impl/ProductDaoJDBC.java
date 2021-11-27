@@ -49,16 +49,8 @@ public class ProductDaoJDBC implements ProductDao {
 			st.setInt(1, id);
 			rs = st.executeQuery();
 			if (rs.next()) {
-				Department dep = new Department();
-				dep.setId(rs.getInt("DepartmentId"));
-				dep.setName(rs.getString("DepName"));
-				Product obj = new Product();
-				obj.setId(rs.getInt("Id"));
-				obj.setName(rs.getString("Name"));
-				obj.setPrice(rs.getDouble("Price"));
-				obj.setQuantity(rs.getInt("Quantity"));
-				obj.setSaleDate(rs.getDate("SaleDate"));
-				obj.setDepartment(dep);
+				Department dep = instantiateDepartment(rs);
+				Product obj = instantiateProduct(rs, dep);
 				return obj;
 			}
 			return null;
@@ -70,6 +62,24 @@ public class ProductDaoJDBC implements ProductDao {
 			DB.closeStatement(st);
 			DB.closeResultSet(rs);
 		}
+	}
+
+	private Product instantiateProduct(ResultSet rs, Department dep) throws SQLException {
+		Product obj = new Product();
+		obj.setId(rs.getInt("Id"));
+		obj.setName(rs.getString("Name"));
+		obj.setPrice(rs.getDouble("Price"));
+		obj.setQuantity(rs.getInt("Quantity"));
+		obj.setSaleDate(rs.getDate("SaleDate"));
+		obj.setDepartment(dep);
+		return obj;
+	}
+
+	private Department instantiateDepartment(ResultSet rs) throws SQLException {
+		Department dep = new Department();
+		dep.setId(rs.getInt("DepartmentId"));
+		dep.setName(rs.getString("DepName"));
+		return dep;
 	}
 
 	@Override
