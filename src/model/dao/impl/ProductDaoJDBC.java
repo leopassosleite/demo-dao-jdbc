@@ -29,20 +29,19 @@ public class ProductDaoJDBC implements ProductDao {
 		PreparedStatement st = null;
 		try {
 			st = conn.prepareStatement(
-					"INSERT INTO product "
-					+ "(Name, SaleDate, Price, Quantity, DepartmentId) "
-					+ "VALUES "
-					+ "(?, ?, ?, ?, ?)",
-					Statement.RETURN_GENERATED_KEYS);
-			
+					"INSERT INTO product " 
+					+ "(Name, SaleDate, Quantity, Price, DepartmentId) "
+					+ "VALUES " 
+					+ "(?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+
 			st.setString(1, obj.getName());
 			st.setDate(2, new java.sql.Date(obj.getSaleDate().getTime()));
 			st.setDouble(3, obj.getPrice());
 			st.setInt(4, obj.getQuantity());
 			st.setInt(5, obj.getDepartment().getId());
-			
+
 			int rowsAffected = st.executeUpdate();
-			
+
 			if (rowsAffected > 0) {
 				ResultSet rs = st.getGeneratedKeys();
 				if (rs.next()) {
@@ -50,15 +49,12 @@ public class ProductDaoJDBC implements ProductDao {
 					obj.setId(id);
 				}
 				DB.closeResultSet(rs);
-			}
-			else {
+			} else {
 				throw new DbException("Erro inexperado nenhuma linha foi afetada");
 			}
-		}
-		catch (SQLException e) {
+		} catch (SQLException e) {
 			throw new DbException(e.getMessage());
-		}
-		finally {
+		} finally {
 			DB.closeStatement(st);
 		}
 
@@ -66,6 +62,27 @@ public class ProductDaoJDBC implements ProductDao {
 
 	@Override
 	public void upadate(Product obj) {
+		PreparedStatement st = null;
+		try {
+			st = conn.prepareStatement(
+					"UPDATE product "
+					+ "SET Name = ?, SaleDate = ?, Quantity = ?, Price = ?, DepartmentId = ? " 
+					+ "WHERE Id = ? ");
+
+			st.setString(1, obj.getName());
+			st.setDate(2, new java.sql.Date(obj.getSaleDate().getTime()));
+			st.setDouble(3, obj.getPrice());
+			st.setInt(4, obj.getQuantity());
+			st.setInt(5, obj.getDepartment().getId());
+			st.setInt(6, obj.getId());
+			
+			st.executeUpdate();
+		} 
+		catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		} finally {
+			DB.closeStatement(st);
+		}
 
 	}
 
@@ -80,8 +97,10 @@ public class ProductDaoJDBC implements ProductDao {
 		ResultSet rs = null;
 		try {
 			st = conn.prepareStatement(
-					"SELECT product.*,department.Name as DepName " + " FROM product INNER JOIN department "
-							+ "ON product.DepartmentId = department.Id " + "WHERE product.Id = ? ");
+					"SELECT product.*,department.Name as DepName " 
+					+ " FROM product INNER JOIN department "
+					+ "ON product.DepartmentId = department.Id " 
+					+ "WHERE product.Id = ? ");
 
 			st.setInt(1, id);
 			rs = st.executeQuery();
@@ -123,8 +142,10 @@ public class ProductDaoJDBC implements ProductDao {
 		ResultSet rs = null;
 		try {
 			st = conn.prepareStatement(
-					"SELECT product.*,department.Name as DepName " + "FROM product INNER JOIN department "
-							+ "ON product.DepartmentId = department.Id " + "ORDER BY Name");
+					"SELECT product.*,department.Name as DepName " 
+					+ "FROM product INNER JOIN department "
+					+ "ON product.DepartmentId = department.Id " 
+					+ "ORDER BY Name");
 
 			rs = st.executeQuery();
 
@@ -157,8 +178,10 @@ public class ProductDaoJDBC implements ProductDao {
 		ResultSet rs = null;
 		try {
 			st = conn.prepareStatement(
-					"SELECT product.*,department.Name as DepName " + "FROM product INNER JOIN department "
-							+ "ON product.DepartmentId = department.Id " + "WHERE DepartmentId = ? " + "ORDER BY Name");
+					"SELECT product.*,department.Name as DepName " 
+					+ "FROM product INNER JOIN department "
+					+ "ON product.DepartmentId = department.Id " 
+					+ "WHERE DepartmentId = ? " + "ORDER BY Name");
 
 			st.setInt(1, department.getId());
 

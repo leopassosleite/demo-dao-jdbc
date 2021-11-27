@@ -34,6 +34,12 @@ public class Program {
 		System.out.println("\n=== TEST 4: product insert ===");
 		Product newProduct = new Product(null, "Televisor", new Date(), 2, 1800.0, department);
 		productDao.insert(newProduct);
-		System.out.println("Inserted! New id =" + newProduct.getId());
+		System.out.println("Inserted! New id = " + newProduct.getId());
+		
+		System.out.println("\n=== TEST 5: product product update ===");
+		product = productDao.findById(1);
+		product.setName("Máquina de lavar");
+		productDao.upadate(product);
+		System.out.println("Updade completo");
 	}
 }
